@@ -25,7 +25,7 @@
     *{box-sizing:border-box}
     html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:var(--text-deep);-webkit-font-smoothing:antialiased}
 
-    /* ---------- Utility ---------- */n
+    /* ---------- Utility ---------- */
     .container{max-width:1200px;margin:0 auto;padding:0 5%}
     .center{text-align:center}
     .muted{color:var(--text-muted)}
@@ -54,7 +54,7 @@
 
     /* animated background orbs */
     .hero-right{position:relative;height:640px}
-    .orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:0.9}
+    .orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:0.9;pointer-events:none}
     .orb.a{width:300px;height:300px;left:-60px;top:-60px;background:radial-gradient(circle,var(--terracotta),transparent)}
     .orb.b{width:220px;height:220px;right:-40px;bottom:-40px;background:radial-gradient(circle,var(--brick),transparent)}
 
@@ -183,9 +183,9 @@
     <div class="container hero">
 
       <div class="hero-left">
-        <span class="kicker">Real‑World Chemistry</span>
+        <span class="kicker">Real-World Chemistry</span>
         <h1>Meet people who match your energy, not just your photos</h1>
-        <p class="lead">FATE blends emotional AI, safe verified meetups, and an in‑app coach so you actually meet people you click with. No hollow swipes — just human connection.</p>
+        <p class="lead">FATE blends emotional AI, safe verified meetups, and an in-app coach so you actually meet people you click with. No hollow swipes — just human connection.</p>
 
         <div class="hero-cta">
           <button class="btn-primary" id="ctaJoin">Join the waitlist</button>
@@ -209,7 +209,7 @@
             <div class="slides" id="slides">
               <div class="slide">
                 <div class="media">Vibe Feed • Maya • Chill</div>
-                <div class="meta"><div><strong>Maya, 26</strong><div class="muted">Loves late coffee & lo‑fi</div></div><div class="mood-pill">Chill</div></div>
+                <div class="meta"><div><strong>Maya, 26</strong><div class="muted">Loves late coffee & lo-fi</div></div><div class="mood-pill">Chill</div></div>
               </div>
               <div class="slide">
                 <div class="media">AI Coach • Try an opener</div>
@@ -292,8 +292,8 @@
 
       <div class="ai-box">
         <div class="caps">After — FATE AI</div>
-        <h3 style="margin:6px 0">Vibe‑first Matching</h3>
-        <p class="muted">Our models synthesize music, captions and micro‑interactions into a dynamic vibe score that evolves with you.</p>
+        <h3 style="margin:6px 0">Vibe-first Matching</h3>
+        <p class="muted">Our models synthesize music, captions and micro-interactions into a dynamic vibe score that evolves with you.</p>
         <div class="compare-list" style="margin-top:10px">
           <div class="compare-item"><div class="badge" style="background:linear-gradient(90deg,var(--terracotta),var(--brick));border-radius:6px;width:14px;height:14px"></div><div class="muted">Emotional resonance</div></div>
           <div class="compare-item"><div class="badge" style="background:linear-gradient(90deg,var(--brick),var(--terracotta));border-radius:6px;width:14px;height:14px"></div><div class="muted">Contextual prompts & missions</div></div>
@@ -336,7 +336,7 @@
         </div>
       </div>
 
-      <div class="center" style="margin-top:12px"><small class="muted">7‑day free trial. Cancel anytime. Monthly and annual billing available.</small></div>
+      <div class="center" style="margin-top:12px"><small class="muted">7-day free trial. Cancel anytime. Monthly and annual billing available.</small></div>
     </section>
 
     <!-- CONVERSION PATH -->
@@ -346,10 +346,10 @@
       <div class="flow" style="margin-top:18px">
         <div class="flow-step"><h4>1. Quick verify</h4><div class="muted">Face + ID check to keep things safe.</div></div>
         <div class="flow-step"><h4>2. Meet your AI coach</h4><div class="muted">Three personalized prompts and a mission.</div></div>
-        <div class="flow-step"><h4>3. First meetup</h4><div class="muted">A suggested low‑pressure mission to meet someone nearby.</div></div>
+        <div class="flow-step"><h4>3. First meetup</h4><div class="muted">A suggested low-pressure mission to meet someone nearby.</div></div>
       </div>
 
-      <div style="margin-top:16px;background:white;padding:14px;border-radius:10px;border:1px solid rgba(19,11,9,0.03)}">
+      <div style="margin-top:16px;background:white;padding:14px;border-radius:10px;border:1px solid rgba(19,11,9,0.03)">
         <div style="font-weight:900;margin-bottom:6px">Sample welcome email</div>
         <div class="muted">Subject: Welcome to FATE — your AI coach is ready
           <br><br>Hi [Name],
@@ -399,54 +399,137 @@
   </div>
 
   <script>
-    // Parallax orbs subtle motion
-    const oA = document.querySelector('.orb.a');
-    const oB = document.querySelector('.orb.b');
-    window.addEventListener('mousemove', e => {
-      const x = (e.clientX / window.innerWidth - 0.5) * 40;
-      const y = (e.clientY / window.innerHeight - 0.5) * 30;
-      if(oA) oA.style.transform = translate3d(${x}px, ${y}px, 0);
-      if(oB) oB.style.transform = translate3d(${x/2 * -1}px, ${y/2}px, 0);
-    });
+    // Helper: safe query
+    const $ = sel => document.querySelector(sel);
 
-    // Phone slides auto-advance
-    const slides = document.getElementById('slides');
+    // Parallax orbs subtle motion (safe checks)
+    const oA = $('.orb.a'), oB = $('.orb.b');
+    if(oA || oB){
+      window.addEventListener('mousemove', e => {
+        const x = (e.clientX / window.innerWidth - 0.5) * 40;
+        const y = (e.clientY / window.innerHeight - 0.5) * 30;
+        if(oA) oA.style.transform = 'translate3d(' + (x) + 'px, ' + (y) + 'px, 0)';
+        if(oB) oB.style.transform = 'translate3d(' + (-x/2) + 'px, ' + (y/2) + 'px, 0)';
+      });
+    }
+
+    // Phone slides auto-advance (robust)
+    const slides = $('#slides');
     const dots = document.querySelectorAll('#dots .dot');
-    let idx = 0; const slideH = 160; const total = slides.children.length; let auto;
-    function render(i){ idx = (i+total)%total; slides.style.transform = translateY(${-(idx*slideH)}px); dots.forEach(d=>d.classList.remove('active')); dots[idx].classList.add('active'); }
-    function start(){ auto = setInterval(()=>render(idx+1), 3000); }
-    function stop(){ clearInterval(auto); }
-    document.getElementById('phoneMock').addEventListener('mouseenter', stop);
-    document.getElementById('phoneMock').addEventListener('mouseleave', start);
+    let idx = 0;
+    let auto = null;
+
+    function slideHeight(){
+      const first = slides && slides.children && slides.children[0];
+      return first ? first.getBoundingClientRect().height : 160;
+    }
+
+    function render(i){
+      if(!slides) return;
+      const total = slides.children.length;
+      idx = ((i % total) + total) % total;
+      const h = slideHeight();
+      slides.style.transform = 'translateY(' + (-(idx * h)) + 'px)';
+      dots.forEach(d=>d.classList.remove('active'));
+      if(dots[idx]) dots[idx].classList.add('active');
+    }
+
+    function startSlides(){
+      stopSlides();
+      auto = setInterval(()=>render(idx+1), 3000);
+    }
+    function stopSlides(){ if(auto) clearInterval(auto); auto = null; }
+
+    const phoneMock = $('#phoneMock');
+    if(phoneMock){
+      phoneMock.addEventListener('mouseenter', stopSlides);
+      phoneMock.addEventListener('mouseleave', startSlides);
+    }
     dots.forEach((d,i)=>d.addEventListener('click', ()=>render(i)));
-    start();
+    // start once DOM ready
+    startSlides();
 
     // Scroll-trigger fade-in
     const faders = document.querySelectorAll('.fade-in');
-    const io = new IntersectionObserver(entries => { entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }) }, {threshold:0.18});
+    const io = new IntersectionObserver(entries => {
+      entries.forEach(e=>{
+        if(e.isIntersecting) e.target.classList.add('in');
+      });
+    }, {threshold:0.18});
     faders.forEach(f=>io.observe(f));
 
     // Progress dots sync with sections
     const progDots = document.querySelectorAll('.prog-dot');
-    const map = ['#features','#ai','#pricing','#faq'].map(s=>document.querySelector(s));
-    const secObs = new IntersectionObserver(entries => { entries.forEach(en=>{ if(en.isIntersecting){ progDots.forEach(p=>p.classList.remove('active')); const i = map.indexOf(en.target); if(i>=0) progDots[i].classList.add('active'); }}) }, {threshold:0.35});
-    map.forEach(m=>m && secObs.observe(m));
-    progDots.forEach(p=>p.addEventListener('click', ()=>{ const el = document.querySelector(p.dataset.sel); el && el.scrollIntoView({behavior:'smooth',block:'center'}); }));
+    const mapSelectors = ['#features','#ai','#pricing','#faq'];
+    const map = mapSelectors.map(s => document.querySelector(s)).filter(Boolean);
+    if(map.length){
+      const secObs = new IntersectionObserver(entries => {
+        entries.forEach(en=>{
+          if(en.isIntersecting){
+            progDots.forEach(p=>p.classList.remove('active'));
+            const i = map.findIndex(m => m === en.target);
+            if(i>=0 && progDots[i]) progDots[i].classList.add('active');
+          }
+        });
+      }, {threshold:0.35});
+      map.forEach(m=>secObs.observe(m));
+      progDots.forEach(p=>p.addEventListener('click', ()=>{
+        const sel = p.dataset.sel;
+        const el = sel ? document.querySelector(sel) : null;
+        if(el) el.scrollIntoView({behavior:'smooth',block:'center'});
+      }));
+    }
 
     // FAQ accordion
-    document.querySelectorAll('.acc').forEach(acc=>{ const btn = acc.querySelector('button'); const panel = acc.querySelector('.panel'); btn.addEventListener('click', ()=>{ const open = btn.getAttribute('aria-expanded')==='true'; btn.setAttribute('aria-expanded', open? 'false':'true'); if(open) panel.style.maxHeight = null; else panel.style.maxHeight = panel.scrollHeight + 'px'; }); });
+    document.querySelectorAll('.acc').forEach(acc=>{
+      const btn = acc.querySelector('button');
+      const panel = acc.querySelector('.panel');
+      if(!btn || !panel) return;
+      btn.addEventListener('click', ()=>{
+        const open = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', open ? 'false' : 'true');
+        if(open) panel.style.maxHeight = null;
+        else panel.style.maxHeight = panel.scrollHeight + 'px';
+      });
+    });
 
     // Modal logic for waitlist
-    const modal = document.getElementById('modal'); const join = document.getElementById('joinWait'); const ctaJoin = document.getElementById('ctaJoin'); const ctaDemo = document.getElementById('ctaDemo'); const closeModal = document.getElementById('closeModal'); const submitEmail = document.getElementById('submitEmail');
-    function openModal(){ modal.style.display = 'grid'; modal.setAttribute('aria-hidden','false'); }
-    function closeM(){ modal.style.display = 'none'; modal.setAttribute('aria-hidden','true'); document.getElementById('emailAck').style.display='none'; }
-    [join, ctaJoin].forEach(b=>b && b.addEventListener('click', openModal));
-    ctaDemo && ctaDemo.addEventListener('click', ()=>{ window.scrollTo({top:document.getElementById('phoneMock').offsetTop-50, behavior:'smooth'}); });
-    closeModal && closeModal.addEventListener('click', closeM);
-    submitEmail && submitEmail.addEventListener('click', ()=>{ const v = document.getElementById('emailInput').value.trim(); if(!v || !v.includes('@')){ alert('Enter a valid email'); return;} document.getElementById('emailAck').style.display='block'; setTimeout(()=>{ closeM(); alert('Welcome — sample welcome email sent (simulated).'); },900); });
+    const modal = $('#modal');
+    const join = $('#joinWait');
+    const ctaJoin = $('#ctaJoin');
+    const ctaDemo = $('#ctaDemo');
+    const closeModal = $('#closeModal');
+    const submitEmail = $('#submitEmail');
+
+    function openModal(){
+      if(!modal) return;
+      modal.style.display = 'grid';
+      modal.setAttribute('aria-hidden','false');
+    }
+    function closeM(){
+      if(!modal) return;
+      modal.style.display = 'none';
+      modal.setAttribute('aria-hidden','true');
+      const ack = $('#emailAck'); if(ack) ack.style.display = 'none';
+    }
+    if(join) join.addEventListener('click', openModal);
+    if(ctaJoin) ctaJoin.addEventListener('click', openModal);
+    if(ctaDemo) ctaDemo.addEventListener('click', ()=>{ const el = $('#phoneMock'); if(el) window.scrollTo({top: el.offsetTop-50, behavior:'smooth'}); });
+    if(closeModal) closeModal.addEventListener('click', closeM);
+    if(submitEmail){
+      submitEmail.addEventListener('click', ()=>{
+        const v = document.getElementById('emailInput').value.trim();
+        if(!v || !v.includes('@')){ alert('Enter a valid email'); return; }
+        const ack = $('#emailAck'); if(ack) ack.style.display='block';
+        setTimeout(()=>{ closeM(); alert('Welcome — sample welcome email sent (simulated).'); },900);
+      });
+    }
 
     // small keyboard controls for slides
-    document.addEventListener('keydown', e=>{ if(e.key==='ArrowDown') render(idx+1); if(e.key==='ArrowUp') render(idx-1); });
+    document.addEventListener('keydown', e=>{
+      if(e.key==='ArrowDown') render(idx+1);
+      if(e.key==='ArrowUp') render(idx-1);
+    });
 
     console.info('FATE prototype loaded — ready.');
   </script>
