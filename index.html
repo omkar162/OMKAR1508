@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FATE — The Warm Chemistry Engine</title>
+  <meta name="description" content="FATE matches on vibe, mood and real-world chemistry. AI-powered, verified meetups and an in-app coach for better dating." />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ---------- Brand colors (from user) ---------- */
+    :root{
+      --terracotta: #C86F53;
+      --brick: #B85F4A;
+      --bg: #FFF8F6;
+      --card: #FFF6F4;
+      --text-deep: #3A2A26;
+      --text-muted: #6D534D;
+      --glass: rgba(255,255,255,0.7);
+      --radius: 18px;
+      --shadow: 0 18px 45px rgba(19,11,9,0.08);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,Arial;background:var(--bg);color:var(--text-deep);-webkit-font-smoothing:antialiased}
+
+    /* ---------- Utility ---------- */n
+    .container{max-width:1200px;margin:0 auto;padding:0 5%}
+    .center{text-align:center}
+    .muted{color:var(--text-muted)}
+
+    /* ---------- Header ---------- */
+    header{position:sticky;top:0;z-index:200;background:linear-gradient(90deg,var(--terracotta),var(--brick));padding:12px 0;backdrop-filter: blur(6px);box-shadow:0 6px 24px rgba(0,0,0,0.06)}
+    .nav{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1200px;margin:0 auto;padding:0 5%}
+    .logo-wrap{display:flex;align-items:center;gap:12px}
+    .logo-mark{width:46px;height:46px;border-radius:10px;display:grid;place-items:center;color:white;font-weight:800;background:linear-gradient(180deg,var(--terracotta),var(--brick));box-shadow:0 8px 28px rgba(200,111,83,0.12)}
+    .logo-text{font-family:'DM Serif Display',serif;color:white;font-size:20px}
+    .logo-sub{font-size:12px;color:rgba(255,255,255,0.9);font-weight:600}
+    nav.links{display:flex;gap:12px;align-items:center}
+    nav.links a{color:rgba(255,255,255,0.95);text-decoration:none;font-weight:700;padding:8px 10px;border-radius:8px}
+    .cta-row{display:flex;gap:10px;align-items:center}
+    .btn-primary{background:white;color:var(--terracotta);padding:9px 14px;border-radius:12px;border:0;font-weight:800;cursor:pointer}
+    .btn-ghost{background:transparent;color:rgba(255,255,255,0.95);padding:8px 12px;border-radius:12px;border:1px solid rgba(255,255,255,0.12)}
+
+    /* ---------- Hero ---------- */
+    .hero{display:grid;grid-template-columns:1fr 420px;gap:36px;align-items:center;padding:80px 0}
+    .hero-left{max-width:760px}
+    .kicker{display:inline-block;padding:8px 12px;border-radius:999px;background:linear-gradient(90deg,var(--brick),var(--terracotta));color:#FFF6F4;font-weight:800}
+    h1{font-family:'DM Serif Display',serif;font-size:46px;margin:18px 0 8px;color:var(--text-deep);line-height:1.02}
+    p.lead{color:var(--text-muted);font-size:18px;margin:0 0 18px}
+    .hero-cta{display:flex;gap:12px;align-items:center;margin-top:8px}
+    .subtle{font-size:13px;color:var(--text-muted);margin-top:10px}
+
+    /* animated background orbs */
+    .hero-right{position:relative;height:640px}
+    .orb{position:absolute;border-radius:50%;filter:blur(40px);opacity:0.9}
+    .orb.a{width:300px;height:300px;left:-60px;top:-60px;background:radial-gradient(circle,var(--terracotta),transparent)}
+    .orb.b{width:220px;height:220px;right:-40px;bottom:-40px;background:radial-gradient(circle,var(--brick),transparent)}
+
+    /* phone mockup */
+    .phone{width:360px;height:640px;border-radius:36px;background:linear-gradient(180deg,var(--card),white);box-shadow:var(--shadow);border:1px solid rgba(184,95,74,0.06);overflow:hidden;margin:0 auto;position:relative}
+    .phone .notch{height:8px;width:120px;background:#efe6e4;border-radius:8px;margin:10px auto}
+    .phone-screen{height:560px;overflow:hidden;position:relative}
+
+    /* slides vertical stack */
+    .slides{display:flex;flex-direction:column;transition:transform 480ms cubic-bezier(.2,.9,.3,1)}
+    .slide{min-height:160px;padding:14px;display:flex;flex-direction:column;gap:10px}
+    .media{height:110px;border-radius:12px;background:linear-gradient(135deg,var(--brick),var(--terracotta));display:flex;align-items:center;justify-content:center;color:white;font-weight:800}
+    .meta{display:flex;justify-content:space-between;align-items:center}
+    .mood-pill{background:rgba(255,255,255,0.12);padding:6px 10px;border-radius:999px;font-weight:800}
+    .dots{display:flex;justify-content:center;gap:8px;padding:8px}
+    .dot{width:8px;height:8px;border-radius:99px;background:rgba(0,0,0,0.12)}
+    .dot.active{background:linear-gradient(90deg,var(--terracotta),var(--brick))}
+    .phone-hint{position:absolute;left:14px;bottom:12px;background:white;padding:7px 10px;border-radius:999px;color:var(--text-muted);font-weight:700;box-shadow:0 8px 20px rgba(19,11,9,0.06)}
+
+    /* ---------- Sections ---------- */
+    section.card{background:var(--card);border-radius:18px;padding:28px;margin:22px 0;box-shadow:0 14px 40px rgba(19,11,9,0.04)}
+    .story h2{font-family:'DM Serif Display',serif;font-size:28px;margin:6px 0}
+    .story p{color:var(--text-muted);font-size:17px}
+
+    /* testimonials */
+    .test-row{display:flex;gap:18px}
+    .testimonial{flex:1;padding:18px;border-radius:12px;background:white;border:1px solid rgba(19,11,9,0.03)}
+    .testimonial p{font-style:italic;margin:8px 0}
+    .who{font-weight:800;color:var(--text-deep)}
+
+    /* logos */
+    .logos{display:flex;gap:18px;justify-content:center;align-items:center;padding:18px}
+    .logos img{height:36px;opacity:0.9;transition:transform 220ms,opacity 220ms}
+    .logos img:hover{transform:translateY(-6px);opacity:1}
+
+    /* insight */
+    .insight{margin-top:18px;text-align:center;font-weight:800;color:var(--terracotta)}
+
+    /* AI visual */
+    .ai-wrap{display:flex;gap:20px;align-items:stretch}
+    .ai-box{flex:1;background:white;border-radius:12px;padding:18px;border:1px solid rgba(19,11,9,0.03)}
+    .compare-item{display:flex;gap:10px;align-items:center;margin:10px 0}
+    .compare-item .badge{width:12px;height:12px;border-radius:99px}
+
+    /* pricing */
+    .pricing-grid{display:flex;gap:18px;margin-top:12px}
+    .price-card{flex:1;background:white;padding:18px;border-radius:12px;border:1px solid rgba(19,11,9,0.03);transition:transform 220ms,box-shadow 220ms}
+    .price-card:hover{transform:translateY(-8px);box-shadow:0 30px 70px rgba(19,11,9,0.06)}
+    .price-amt{font-size:28px;font-weight:900;color:var(--terracotta)}
+    .price-table{width:100%;margin-top:10px}
+    .price-table td{padding:8px;border-bottom:1px dashed rgba(19,11,9,0.03)}
+
+    /* conversion flow */
+    .flow{display:flex;gap:12px;justify-content:center}
+    .flow-step{background:white;padding:14px;border-radius:12px;min-width:200px;border:1px solid rgba(19,11,9,0.03)}
+
+    /* faq */
+    .faq .acc{background:white;border-radius:12px;padding:12px;margin-bottom:10px;border:1px solid rgba(19,11,9,0.03)}
+    .acc button{width:100%;text-align:left;background:transparent;border:0;padding:10px;font-weight:800;cursor:pointer}
+    .panel{max-height:0;overflow:hidden;transition:max-height 320ms ease}
+
+    /* progress indicator */
+    .progress{position:fixed;right:14px;top:40%;display:flex;flex-direction:column;gap:12px;z-index:210}
+    .prog-dot{width:14px;height:14px;border-radius:99px;background:rgba(0,0,0,0.06)}
+    .prog-dot.active{background:linear-gradient(90deg,var(--terracotta),var(--brick));box-shadow:0 8px 24px rgba(200,111,83,0.14)}
+
+    /* responsive */
+    @media (max-width:980px){
+      .hero{grid-template-columns:1fr;gap:20px;padding:40px 5%}
+      .hero-right{height:auto}
+      .phone{width:300px;height:560px}
+      .slides .slide{min-height:140px}
+      .test-row{flex-direction:column}
+      .ai-wrap{flex-direction:column}
+      .pricing-grid{flex-direction:column}
+    }
+
+    /* small animations */
+    .fade-in{opacity:0;transform:translateY(12px);transition:opacity 520ms,transform 520ms}
+    .fade-in.in{opacity:1;transform:none}
+
+    /* subtle focus outlines */
+    a:focus,button:focus,input:focus{outline:3px solid rgba(200,111,83,0.18);outline-offset:2px}
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="nav">
+      <div class="logo-wrap">
+        <div class="logo-mark" aria-hidden>
+          <!-- animated mark: two overlapping rings -->
+          <svg width="34" height="34" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#C86F53"/><stop offset="1" stop-color="#B85F4A"/></linearGradient>
+            </defs>
+            <g>
+              <circle cx="18" cy="24" r="10" stroke="url(#g)" stroke-width="3" stroke-opacity="0.95" fill="rgba(255,255,255,0.06)" />
+              <circle cx="30" cy="20" r="8" stroke="rgba(255,255,255,0.85)" stroke-width="2" stroke-opacity="0.85" fill="rgba(255,255,255,0.02)" />
+            </g>
+          </svg>
+        </div>
+        <div>
+          <div class="logo-text">FATE</div>
+          <div class="logo-sub">Where real chemistry happens</div>
+        </div>
+      </div>
+
+      <nav class="links" aria-label="Main navigation">
+        <a href="#features">Features</a>
+        <a href="#ai">AI</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+
+      <div class="cta-row">
+        <button class="btn-ghost" id="requestDeck">Request Deck</button>
+        <button class="btn-primary" id="joinWait">Join Waitlist</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <main>
+    <div class="container hero">
+
+      <div class="hero-left">
+        <span class="kicker">Real‑World Chemistry</span>
+        <h1>Meet people who match your energy, not just your photos</h1>
+        <p class="lead">FATE blends emotional AI, safe verified meetups, and an in‑app coach so you actually meet people you click with. No hollow swipes — just human connection.</p>
+
+        <div class="hero-cta">
+          <button class="btn-primary" id="ctaJoin">Join the waitlist</button>
+          <button class="btn-ghost" id="ctaDemo">Live demo</button>
+        </div>
+        <div class="subtle">Join 4,200+ early testers. Limited closed beta spots.</div>
+
+        <div id="features" style="margin-top:22px">
+          <div class="caps">Core matching</div>
+          <h3 style="margin:6px 0">Vibe Feed · Mood Matching · AI Vibe Engine</h3>
+        </div>
+      </div>
+
+      <div class="hero-right">
+        <div class="orb a"></div>
+        <div class="orb b"></div>
+
+        <div class="phone" id="phoneMock" aria-hidden>
+          <div class="notch"></div>
+          <div class="phone-screen">
+            <div class="slides" id="slides">
+              <div class="slide">
+                <div class="media">Vibe Feed • Maya • Chill</div>
+                <div class="meta"><div><strong>Maya, 26</strong><div class="muted">Loves late coffee & lo‑fi</div></div><div class="mood-pill">Chill</div></div>
+              </div>
+              <div class="slide">
+                <div class="media">AI Coach • Try an opener</div>
+                <div class="meta"><div><strong>AI Coach</strong><div class="muted">Smart prompts & tone tips</div></div><div class="mood-pill">Coach</div></div>
+              </div>
+              <div class="slide">
+                <div class="media">FATE Rooms • Live Jazz</div>
+                <div class="meta"><div><strong>Cafe Kismet</strong><div class="muted">Nearby: 1.1 km</div></div><div class="mood-pill">Room</div></div>
+              </div>
+              <div class="slide">
+                <div class="media">MeetCute Mission • Gelato</div>
+                <div class="meta"><div><strong>Gelato Mission</strong><div class="muted">Check in to reveal prompt</div></div><div class="mood-pill">Mission</div></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dots" id="dots">
+            <div class="dot active"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+
+          <div class="phone-hint">Scroll inside the mock to explore</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- STORY -->
+    <section class="card container story fade-in">
+      <h2>Why we built FATE — a honest note</h2>
+      <p>We were exhausted. Swiping had become a reflex and every chat felt performative. We realised the problem wasn't people — it was the system. Dating apps taught us to judge by a single photo and to treat conversation like a transaction. So we designed something different: an experience that values how you feel, not just how you look. Our AI learns tone, our missions create natural meetups, and our verification keeps things safe. It’s human-first dating.</p>
+    </section>
+
+    <!-- SOCIAL PROOF -->
+    <section class="card container fade-in">
+      <div class="center caps">Social Proof</div>
+      <div class="test-row" style="margin-top:12px">
+        <div class="testimonial">
+          <div class="badge">Beta User</div>
+          <p>“FATE made dating fun again — no pressure, just real talks. I matched in 3 days.”</p>
+          <div class="who">Aarav, 27 — Mumbai</div>
+        </div>
+        <div class="testimonial">
+          <div class="badge">Verified</div>
+          <p>“Met a match through a MeetCute mission — we grabbed chai and actually clicked.”</p>
+          <div class="who">Meera, 25 — Pune</div>
+        </div>
+        <div class="testimonial">
+          <div class="badge">Top Contributor</div>
+          <p>“The AI coach gave me a short opener that felt natural. No overthinking.”</p>
+          <div class="who">Rahul, 29 — Bangalore</div>
+        </div>
+      </div>
+
+      <div class="logos" style="margin-top:18px">
+        <img src="https://dummyimage.com/120x36/efe6e4/6d534d.png&text=Reddit" alt="Reddit">
+        <img src="https://dummyimage.com/120x36/efe6e4/6d534d.png&text=Spotify" alt="Spotify">
+        <img src="https://dummyimage.com/120x36/efe6e4/6d534d.png&text=Instagram" alt="Instagram">
+        <img src="https://dummyimage.com/120x36/efe6e4/6d534d.png&text=CafeKismet" alt="CafeKismet">
+        <img src="https://dummyimage.com/120x36/efe6e4/6d534d.png&text=Artify" alt="Artify">
+      </div>
+
+      <div class="insight">💡 Research insight (Jan 2025) — 72% of active daters say emotional resonance predicts longer interest than looks.</div>
+    </section>
+
+    <!-- AI VISUAL -->
+    <section class="card container fade-in ai-wrap" id="ai">
+      <div class="ai-box">
+        <div class="caps">Before</div>
+        <h3 style="margin:6px 0">Swipe & Hope</h3>
+        <p class="muted">Matches based mostly on photos. Little context. High drop-off.</p>
+        <div class="compare-list" style="margin-top:10px">
+          <div class="compare-item"><div class="badge" style="background:#ddd;border-radius:6px;width:14px;height:14px"></div><div class="muted">Shallow first impressions</div></div>
+          <div class="compare-item"><div class="badge" style="background:#ddd;border-radius:6px;width:14px;height:14px"></div><div class="muted">Ghosting</div></div>
+          <div class="compare-item"><div class="badge" style="background:#ddd;border-radius:6px;width:14px;height:14px"></div><div class="muted">Endless scrolling</div></div>
+        </div>
+      </div>
+
+      <div class="ai-box">
+        <div class="caps">After — FATE AI</div>
+        <h3 style="margin:6px 0">Vibe‑first Matching</h3>
+        <p class="muted">Our models synthesize music, captions and micro‑interactions into a dynamic vibe score that evolves with you.</p>
+        <div class="compare-list" style="margin-top:10px">
+          <div class="compare-item"><div class="badge" style="background:linear-gradient(90deg,var(--terracotta),var(--brick));border-radius:6px;width:14px;height:14px"></div><div class="muted">Emotional resonance</div></div>
+          <div class="compare-item"><div class="badge" style="background:linear-gradient(90deg,var(--brick),var(--terracotta));border-radius:6px;width:14px;height:14px"></div><div class="muted">Contextual prompts & missions</div></div>
+          <div class="compare-item"><div class="badge" style="background:linear-gradient(90deg,var(--terracotta),var(--brick));border-radius:6px;width:14px;height:14px"></div><div class="muted">Higher meetups, lower churn</div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="card container fade-in" id="pricing">
+      <div class="center caps">Pricing</div>
+      <h2 class="center" style="margin:6px 0">Simple, fair pricing that prioritises results</h2>
+      <p class="center muted">No manipulative boosts. One predictable plan for people who want real matches.</p>
+
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="caps">Typical Competitor</div>
+          <div class="price-amt">₹999 <span style="font-size:12px;font-weight:700">/mo</span></div>
+          <div class="price-table">
+            <table style="width:100%">
+              <tr><td>Vibe matching</td><td>—</td></tr>
+              <tr><td>AI Coach</td><td>—</td></tr>
+              <tr><td>Venue partners</td><td>—</td></tr>
+              <tr><td>Verification</td><td>Limited</td></tr>
+            </table>
+          </div>
+        </div>
+
+        <div class="price-card">
+          <div class="caps">FATE</div>
+          <div class="price-amt">₹499 <span style="font-size:12px;font-weight:700">/mo</span></div>
+          <div class="price-table">
+            <table style="width:100%">
+              <tr><td>Vibe matching</td><td>Yes</td></tr>
+              <tr><td>AI Coach</td><td>Yes</td></tr>
+              <tr><td>Venue partners</td><td>Yes</td></tr>
+              <tr><td>Verification</td><td>Mandatory</td></tr>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="center" style="margin-top:12px"><small class="muted">7‑day free trial. Cancel anytime. Monthly and annual billing available.</small></div>
+    </section>
+
+    <!-- CONVERSION PATH -->
+    <section class="card container fade-in">
+      <div class="center caps">Conversion Path</div>
+      <h2 class="center">What happens after you sign up</h2>
+      <div class="flow" style="margin-top:18px">
+        <div class="flow-step"><h4>1. Quick verify</h4><div class="muted">Face + ID check to keep things safe.</div></div>
+        <div class="flow-step"><h4>2. Meet your AI coach</h4><div class="muted">Three personalized prompts and a mission.</div></div>
+        <div class="flow-step"><h4>3. First meetup</h4><div class="muted">A suggested low‑pressure mission to meet someone nearby.</div></div>
+      </div>
+
+      <div style="margin-top:16px;background:white;padding:14px;border-radius:10px;border:1px solid rgba(19,11,9,0.03)}">
+        <div style="font-weight:900;margin-bottom:6px">Sample welcome email</div>
+        <div class="muted">Subject: Welcome to FATE — your AI coach is ready
+          <br><br>Hi [Name],
+          <br><br>Welcome to FATE. Your AI coach is in-app now — try these three small prompts to start: 1) post a 10s vibe reel, 2) share your favourite street snack, 3) set your mood for the week. We’ll suggest nearby rooms and a MeetCute mission within 24 hours.
+          <br><br>— The FATE Team
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="card container faq fade-in" id="faq">
+      <div class="center caps">FAQ</div>
+      <div class="acc"><button aria-expanded="false">How does the AI Vibe Engine use my data?</button><div class="panel"><p class="muted">It analyses only data you choose to share — playlists, captions, and in-app behaviour. You control sharing and can delete data anytime.</p></div></div>
+      <div class="acc"><button aria-expanded="false">Is verification mandatory?</button><div class="panel"><p class="muted">Yes. Face + ID verification is required for in-person MeetCute missions to reduce risk.</p></div></div>
+      <div class="acc"><button aria-expanded="false">What if someone behaves badly?</button><div class="panel"><p class="muted">AI Safety Monitor flags suspicious behaviour and our safety team can action reports, temporary bans, and trusted contact check-ins.</p></div></div>
+    </section>
+
+  </main>
+
+  <!-- Progress dots -->
+  <div class="progress" id="progress" aria-hidden>
+    <div class="prog-dot active" data-sel="#features"></div>
+    <div class="prog-dot" data-sel="#ai"></div>
+    <div class="prog-dot" data-sel="#pricing"></div>
+    <div class="prog-dot" data-sel="#faq"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer style="padding:40px 6%;text-align:center;color:var(--text-muted)">
+    <div style="margin-bottom:12px">Follow FATE</div>
+    <div style="display:flex;justify-content:center;gap:14px;margin-bottom:18px">
+      <a href="#">Instagram</a>
+      <a href="#">Twitter</a>
+      <a href="#">LinkedIn</a>
+    </div>
+    <div style="font-size:13px;color:var(--text-muted)">© 2025 FATE — All rights reserved</div>
+  </footer>
+
+  <!-- Modals & scripts -->
+  <div id="modal" aria-hidden style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);place-items:center;align-items:center;justify-content:center;z-index:260">
+    <div style="background:white;padding:18px;border-radius:12px;max-width:520px;width:90%;box-shadow:var(--shadow)">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><strong id="modalTitle">Join Waitlist</strong><button id="closeModal" style="background:transparent;border:0;font-weight:800;cursor:pointer">✕</button></div>
+      <p class="muted" id="modalDesc">Enter your email to join the closed beta and get early access.</p>
+      <div style="display:flex;gap:8px;margin-top:10px"><input id="emailInput" placeholder="you@domain.com" style="flex:1;padding:10px;border-radius:8px;border:1px solid rgba(19,11,9,0.06)" /><button class="btn-primary" id="submitEmail">Join</button></div>
+      <div id="emailAck" style="margin-top:10px;color:var(--text-muted);font-size:13px;display:none">Thanks — check your inbox for a welcome note (simulated).</div>
+    </div>
+  </div>
+
+  <script>
+    // Parallax orbs subtle motion
+    const oA = document.querySelector('.orb.a');
+    const oB = document.querySelector('.orb.b');
+    window.addEventListener('mousemove', e => {
+      const x = (e.clientX / window.innerWidth - 0.5) * 40;
+      const y = (e.clientY / window.innerHeight - 0.5) * 30;
+      if(oA) oA.style.transform = translate3d(${x}px, ${y}px, 0);
+      if(oB) oB.style.transform = translate3d(${x/2 * -1}px, ${y/2}px, 0);
+    });
+
+    // Phone slides auto-advance
+    const slides = document.getElementById('slides');
+    const dots = document.querySelectorAll('#dots .dot');
+    let idx = 0; const slideH = 160; const total = slides.children.length; let auto;
+    function render(i){ idx = (i+total)%total; slides.style.transform = translateY(${-(idx*slideH)}px); dots.forEach(d=>d.classList.remove('active')); dots[idx].classList.add('active'); }
+    function start(){ auto = setInterval(()=>render(idx+1), 3000); }
+    function stop(){ clearInterval(auto); }
+    document.getElementById('phoneMock').addEventListener('mouseenter', stop);
+    document.getElementById('phoneMock').addEventListener('mouseleave', start);
+    dots.forEach((d,i)=>d.addEventListener('click', ()=>render(i)));
+    start();
+
+    // Scroll-trigger fade-in
+    const faders = document.querySelectorAll('.fade-in');
+    const io = new IntersectionObserver(entries => { entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('in'); }) }, {threshold:0.18});
+    faders.forEach(f=>io.observe(f));
+
+    // Progress dots sync with sections
+    const progDots = document.querySelectorAll('.prog-dot');
+    const map = ['#features','#ai','#pricing','#faq'].map(s=>document.querySelector(s));
+    const secObs = new IntersectionObserver(entries => { entries.forEach(en=>{ if(en.isIntersecting){ progDots.forEach(p=>p.classList.remove('active')); const i = map.indexOf(en.target); if(i>=0) progDots[i].classList.add('active'); }}) }, {threshold:0.35});
+    map.forEach(m=>m && secObs.observe(m));
+    progDots.forEach(p=>p.addEventListener('click', ()=>{ const el = document.querySelector(p.dataset.sel); el && el.scrollIntoView({behavior:'smooth',block:'center'}); }));
+
+    // FAQ accordion
+    document.querySelectorAll('.acc').forEach(acc=>{ const btn = acc.querySelector('button'); const panel = acc.querySelector('.panel'); btn.addEventListener('click', ()=>{ const open = btn.getAttribute('aria-expanded')==='true'; btn.setAttribute('aria-expanded', open? 'false':'true'); if(open) panel.style.maxHeight = null; else panel.style.maxHeight = panel.scrollHeight + 'px'; }); });
+
+    // Modal logic for waitlist
+    const modal = document.getElementById('modal'); const join = document.getElementById('joinWait'); const ctaJoin = document.getElementById('ctaJoin'); const ctaDemo = document.getElementById('ctaDemo'); const closeModal = document.getElementById('closeModal'); const submitEmail = document.getElementById('submitEmail');
+    function openModal(){ modal.style.display = 'grid'; modal.setAttribute('aria-hidden','false'); }
+    function closeM(){ modal.style.display = 'none'; modal.setAttribute('aria-hidden','true'); document.getElementById('emailAck').style.display='none'; }
+    [join, ctaJoin].forEach(b=>b && b.addEventListener('click', openModal));
+    ctaDemo && ctaDemo.addEventListener('click', ()=>{ window.scrollTo({top:document.getElementById('phoneMock').offsetTop-50, behavior:'smooth'}); });
+    closeModal && closeModal.addEventListener('click', closeM);
+    submitEmail && submitEmail.addEventListener('click', ()=>{ const v = document.getElementById('emailInput').value.trim(); if(!v || !v.includes('@')){ alert('Enter a valid email'); return;} document.getElementById('emailAck').style.display='block'; setTimeout(()=>{ closeM(); alert('Welcome — sample welcome email sent (simulated).'); },900); });
+
+    // small keyboard controls for slides
+    document.addEventListener('keydown', e=>{ if(e.key==='ArrowDown') render(idx+1); if(e.key==='ArrowUp') render(idx-1); });
+
+    console.info('FATE prototype loaded — ready.');
+  </script>
+</body>
+</html>
