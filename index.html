@@ -1,0 +1,340 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>FATE — Meet people who match your vibe</title>
+<meta name="description" content="FATE: Vibe-based dating that moves people from chat to real life. Get early access."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --primary:#1868ae;
+    --accent:#d9a5b3;
+    --soft:#c6d7eb;
+    --muted:#6b7280;
+    --bg:#ffffff;
+    --card:#fff;
+    --radius:18px;
+    --glass: rgba(255,255,255,0.7);
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:linear-gradient(180deg,#fbfdff 0%, #ffffff 30%);color:#0f1724;line-height:1.45;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1150px;margin:0 auto;padding:36px}
+
+  /* Header */
+  header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}
+  .logo{display:flex;gap:12px;align-items:center}
+  .logo-mark{width:52px;height:52px;border-radius:12px;background:linear-gradient(180deg,var(--accent),var(--primary));display:grid;place-items:center;color:white;font-weight:800;font-size:20px}
+  .logo-text{font-weight:800;color:var(--primary);font-size:18px}
+
+  /* HERO */
+  .hero{display:grid;grid-template-columns:1fr 420px;gap:36px;align-items:center;background:var(--soft);padding:34px;border-radius:24px;box-shadow:0 18px 50px rgba(24,40,70,0.06)}
+  .hero-left h1{font-size:36px;color:var(--primary);margin:0;line-height:1.02}
+  .hero-left p{color:var(--muted);font-size:17px;margin:14px 0 18px}
+  .cta-row{display:flex;gap:12px;align-items:center}
+  .input{padding:12px 14px;border-radius:12px;border:1px solid rgba(20,40,80,0.06);flex:1}
+  .btn{padding:12px 16px;border-radius:12px;border:0;font-weight:700;cursor:pointer}
+  .btn-primary{background:var(--primary);color:white;box-shadow:0 8px 24px rgba(24,104,174,0.12)}
+  .btn-ghost{background:transparent;border:2px solid rgba(0,0,0,0.06);color:var(--primary)}
+
+  /* phone mock */
+  .hero-right{display:flex;flex-direction:column;align-items:center;gap:14px}
+  .mock-phone{width:360px;border-radius:28px;overflow:hidden;background:#fff;box-shadow:0 20px 50px rgba(16,24,40,0.08);border:1px solid rgba(16,24,40,0.03)}
+  .mock-header{padding:14px;background:linear-gradient(90deg,#ffffffcc,rgba(255,255,255,0.6));display:flex;gap:12px;align-items:center}
+  .mock-header .avatar{width:42px;height:42px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--primary));color:white;display:grid;place-items:center;font-weight:800}
+  .mock-image{width:100%;height:420px;object-fit:cover;display:block}
+
+  /* story block */
+  .story{display:flex;gap:24px;align-items:center;margin-top:34px}
+  .story-media{flex:0 0 360px;border-radius:16px;overflow:hidden;box-shadow:0 20px 50px rgba(16,24,40,0.06)}
+  .story-card{background:var(--card);padding:20px;border-radius:16px;box-shadow:0 10px 30px rgba(16,24,40,0.04)}
+  .story h2{color:var(--primary);margin:0 0 8px;font-size:24px}
+  .story p{color:var(--muted);margin:0;font-size:15px}
+
+  /* features list */
+  .features{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;margin-top:28px}
+  .feature{display:flex;gap:14px;background:var(--card);padding:18px;border-radius:14px;align-items:flex-start;box-shadow:0 10px 30px rgba(16,24,40,0.04)}
+  .feature .icon{width:64px;height:64px;border-radius:12px;display:grid;place-items:center;color:white;font-size:26px}
+  .vibe{background:linear-gradient(90deg,var(--accent),var(--primary))}
+  .rooms{background:linear-gradient(90deg,#4b6f92,#7fb3d6)}
+  .meetcute{background:linear-gradient(90deg,#f08c6c,#d96a6a)}
+  .group{background:linear-gradient(90deg,#66b2a1,#9ad3c8)}
+  .feature h4{margin:0 0 6px}
+
+  /* social proof */
+  .social{margin-top:34px}
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .testi{background:#fff;padding:16px;border-radius:12px;box-shadow:0 8px 26px rgba(16,24,40,0.04);font-style:italic;color:#1f2937}
+  .logos{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+  .logo-pill{background:white;padding:8px 12px;border-radius:999px;box-shadow:0 6px 16px rgba(16,24,40,0.04);font-weight:700;color:var(--muted)}
+
+  /* ai comparison */
+  .ai-compare{display:flex;gap:18px;margin-top:26px}
+  .ai-card{flex:1;background:white;padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(16,24,40,0.04)}
+  .ai-card h4{margin:0 0 8px;color:var(--primary)}
+  .ai-visual{margin-top:12px;border-radius:12px;overflow:hidden;border:1px solid rgba(16,24,40,0.03)}
+  .ai-visual img{width:100%;display:block}
+
+  /* pricing */
+  .pricing{display:flex;gap:16px;margin-top:26px}
+  .plan{flex:1;background:linear-gradient(180deg,#fff,#fbfdff);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(16,24,40,0.04)}
+  .plan .price{font-size:22px;color:var(--primary);font-weight:800;margin-bottom:6px}
+
+  /* conversion path */
+  .conversion{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:26px}
+  .conv-box{background:white;padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(16,24,40,0.04)}
+  .conv-box h4{margin:0 0 8px}
+
+  footer{margin-top:36px;padding:24px 0;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eff6ff;color:var(--muted)}
+  footer .small{font-size:14px}
+
+  /* responsive */
+  @media (max-width:980px){
+    .hero{grid-template-columns:1fr;gap:20px}
+    .story{flex-direction:column}
+    .features{grid-template-columns:1fr}
+    .ai-compare{flex-direction:column}
+    .pricing{flex-direction:column}
+    .conversion{grid-template-columns:1fr}
+    .hero-right{order: -1}
+  }
+</style>
+</head>
+<body>
+  <div class="wrap">
+
+    <!-- header -->
+    <header>
+      <div class="logo">
+        <div class="logo-mark">F</div>
+        <div>
+          <div class="logo-text">FATE</div>
+          <div style="font-size:12px;color:var(--muted)">Real chemistry. Real meetups.</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <button class="btn" style="background:transparent;border:1px solid rgba(0,0,0,0.06);border-radius:12px">Request Deck</button>
+        <button class="btn btn-primary">Join Waitlist</button>
+      </div>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero" aria-label="Hero">
+      <div class="hero-left">
+        <h1>Meet people who match your vibe — not just your photos.</h1>
+        <p>FATE uses emotional AI, local Rooms, & gentle MeetCute Missions to nudge matches into safe, real-world moments — no pressure, only chemistry.</p>
+
+        <div class="cta-row" style="margin-top:18px">
+          <input class="input" id="email" placeholder="Enter your email for early access"/>
+          <button class="btn btn-primary" onclick="joined()">Get Early Access</button>
+          <button class="btn btn-ghost" onclick="demo()">See Demo</button>
+        </div>
+
+        <div style="margin-top:18px;color:var(--muted)">Launching pilots in Mumbai & Bangalore • Limited spots</div>
+      </div>
+
+      <div class="hero-right">
+        <!-- phone mock shows app screenshot + lifestyle image behind -->
+        <div class="mock-phone" role="img" aria-label="App mockup with happy couple">
+          <!-- top header -->
+          <div class="mock-header">
+            <div class="avatar">AP</div>
+            <div style="flex:1">
+              <div style="font-weight:800">Vibe Feed</div>
+              <div style="font-size:13px;color:var(--muted)">Quickly scroll personalities, not profiles</div>
+            </div>
+            <div style="font-size:13px;color:var(--muted)">• • •</div>
+          </div>
+
+          <!-- lifestyle + screen -->
+          <picture>
+            <source srcset="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=900&q=80" media="(min-width:801px)">
+            <img class="mock-image" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=700&q=70" alt="Happy couple at café — hero lifestyle"/>
+          </picture>
+        </div>
+
+        <!-- small secondary mock (app UI screenshot) -->
+        <div style="display:flex;gap:12px;margin-top:8px">
+          <div style="width:160px;border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(16,24,40,0.06)">
+            <img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=700&q=80" style="width:100%;display:block" alt="App screen showing Vibe Feed"/>
+          </div>
+          <div style="width:160px;border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(16,24,40,0.06)">
+            <img src="https://images.unsplash.com/photo-1504817314-9cc2f0f1e7b0?auto=format&fit=crop&w=700&q=80" style="width:100%;display:block" alt="Group dating image"/>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- STORY -->
+    <section class="story" aria-labelledby="why">
+      <div style="display:flex;gap:20px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;min-width:260px">
+          <h2 id="why" style="font-size:22px;color:var(--primary)">Why we built FATE — real talk</h2>
+          <p style="margin-top:10px;color:var(--muted)">We were exhausted by swipe-first apps that keep people in chat loops. Real chemistry doesn't live in a grid of photos. FATE was built to move dating from screens into safe, simple, in-person moments — guided by AI that understands tone and context.</p>
+        </div>
+
+        <div style="flex:0 0 360px">
+          <div style="border-radius:14px;overflow:hidden;box-shadow:0 12px 28px rgba(16,24,40,0.06)">
+            <img src="https://images.unsplash.com/photo-1521305916504-4a1121188589?auto=format&fit=crop&w=900&q=80" alt="Couple smiling at cafe" style="width:100%;display:block">
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section aria-labelledby="features" style="margin-top:10px">
+      <h2 id="features" style="color:var(--primary);font-size:22px">Core Features</h2>
+      <div class="features">
+        <div class="feature">
+          <div class="icon vibe">🎧</div>
+          <div>
+            <h4>Vibe-Based Matching</h4>
+            <p style="color:var(--muted)">Match on mood, music, humour and texting style — not just photos. The result: connections that feel natural from the first message.</p>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="icon rooms">📍</div>
+          <div>
+            <h4>FATE Rooms</h4>
+            <p style="color:var(--muted)">Open a Room at a café, event or campus—see others nearby who share your vibe and join safely.</p>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="icon meetcute">💛</div>
+          <div>
+            <h4>MeetCute Missions</h4>
+            <p style="color:var(--muted)">If someone who matches your vibe is already at a spot, FATE nudges you: “Someone who vibes with you is here — want to meet?” We guide you with an icebreaker and safe venue check-ins.</p>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="icon group">👥</div>
+          <div>
+            <h4>Group Dating</h4>
+            <p style="color:var(--muted)">Match and meet with friend groups for pickleball, concerts, or coffee — less pressure, more fun and safer first meets.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SOCIAL PROOF -->
+    <section class="social" aria-labelledby="social">
+      <h2 id="social" style="color:var(--primary);font-size:22px">What early users are saying</h2>
+      <div class="testi-grid" style="margin-top:12px">
+        <div class="testi">“FATE felt like meeting someone at a gig — natural and zero pressure.” — Priya, 22</div>
+        <div class="testi">“The Vibe Feed actually matched my taste — for the first time.” — Ayesha, 19</div>
+        <div class="testi">“Group mode made meeting new people fun and safe.” — Raghav, 24</div>
+      </div>
+
+      <div style="margin-top:18px">
+        <h4 style="margin:0 0 8px 0;color:var(--primary)">Where our early users hang out</h4>
+        <div class="logos">
+          <div class="logo-pill">IIT Bombay</div>
+          <div class="logo-pill">NMIMS</div>
+          <div class="logo-pill">St. Xavier’s</div>
+          <div class="logo-pill">Blue Tokai</div>
+          <div class="logo-pill">Social Offline</div>
+        </div>
+
+        <div style="margin-top:12px;background:#f3fbff;padding:12px;border-radius:12px;color:var(--muted)">💡 Research insight: Only ~6% of Indians currently use dating apps — trust, not interest, is the key barrier.</div>
+      </div>
+    </section>
+
+    <!-- AI ADVANTAGE -->
+    <section class="ai-compare" aria-labelledby="ai">
+      <div style="flex:1">
+        <h3 id="ai" style="color:var(--primary);font-size:22px">Swipe apps vs FATE — the AI advantage</h3>
+        <div class="ai-card" style="margin-top:12px">
+          <h4>Before — Swipe apps</h4>
+          <ul style="color:var(--muted);margin-top:8px">
+            <li>Matches based mostly on photos</li>
+            <li>Limited context about personality</li>
+            <li>Few real-world meetups</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="flex:1">
+        <div class="ai-card">
+          <h4>After — FATE</h4>
+          <ul style="color:var(--muted);margin-top:8px">
+            <li>AI reads music, captions & tone to build a Vibe Signature</li>
+            <li>MeetCute Missions and Rooms convert matches into meetings</li>
+            <li>Built-in safety & verification increase trust</li>
+          </ul>
+        </div>
+
+        <div class="ai-visual" style="margin-top:12px">
+          <img src="https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1400&q=80" alt="AI illustration" style="width:100%;display:block;border-radius:12px" />
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section style="margin-top:28px">
+      <h3 style="color:var(--primary);font-size:22px">Pricing — designed for real outcomes</h3>
+      <div class="pricing">
+        <div class="plan">
+          <div class="price">Free</div>
+          <div style="color:var(--muted);margin-top:8px">Vibe Feed, basic Rooms & MeetCute access</div>
+        </div>
+        <div class="plan">
+          <div class="price">₹199 / month</div>
+          <div style="color:var(--muted);margin-top:8px">Premium AI coach, priority MeetCutes, group passes</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;background:white;padding:12px;border-radius:12px;box-shadow:0 8px 20px rgba(16,24,40,0.04)">
+        <strong>Why this is better</strong>
+        <p style="margin:8px 0;color:var(--muted)">Other apps charge for visibility and gamified boosts. FATE charges for real outcomes — coaching and safe meetups that get you offline faster.</p>
+      </div>
+    </section>
+
+    <!-- CONVERSION PATH -->
+    <section style="margin-top:28px">
+      <h3 style="color:var(--primary);font-size:22px">What happens after you sign up</h3>
+      <div class="conversion">
+        <div class="conv-box">
+          <h4>1. Quick verify</h4>
+          <p style="color:var(--muted)">Face + ID verification to reduce fakes and catfishing.</p>
+        </div>
+        <div class="conv-box">
+          <h4>2. Meet your AI coach</h4>
+          <p style="color:var(--muted)">Three personalised prompts and a MeetCute mission within 24 hours.</p>
+        </div>
+        <div class="conv-box">
+          <h4>3. First meetup</h4>
+          <p style="color:var(--muted)">Suggested verified venue, optional trusted contact, and a short post-date reflection prompt.</p>
+        </div>
+        <div class="conv-box">
+          <h4>Sample welcome email</h4>
+          <p style="color:var(--muted)">Subject: Welcome to FATE — your vibe coach is ready. Hi [Name], add a song and a short vibe line. We'll suggest Rooms and your first MeetCute soon.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA footer -->
+    <footer>
+      <div>
+        <div style="font-weight:800;color:var(--primary)">Ready to meet someone who shares your vibe?</div>
+        <div class="small">Limited pilot spots — early access available</div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center">
+        <input id="footerEmail" placeholder="Your email" style="padding:10px;border-radius:12px;border:1px solid rgba(16,24,40,0.06)"/>
+        <button class="btn btn-primary" onclick="joinedFooter()">Get Early Access</button>
+      </div>
+    </footer>
+  </div>
+
+<script>
+  function joined(){ const e = document.getElementById('email').value.trim(); if(!e || !e.includes('@')){ alert('Enter a valid email'); return } alert('Thanks — you are added to the early access list.'); }
+  function joinedFooter(){ const e = document.getElementById('footerEmail').value.trim(); if(!e || !e.includes('@')){ alert('Enter a valid email'); return } alert('Thanks — we\\'ll email you early access details.'); }
+  function demo(){ window.scrollTo({top: document.querySelector('.ai-compare').offsetTop - 40, behavior: 'smooth'}) }
+</script>
+</body>
+</html>
